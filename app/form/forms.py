@@ -27,6 +27,16 @@ class RegistrationForm(FlaskForm):
         email=User.query.filter_by(email=email.data).first()
         if email:
             raise ValidationError('the email belongs to other, u need new email')
+    def validate_password(self, password):
+        password = password.data
+        if len(password)< 8:
+            raise ValidationError('Password must be at lest 8 letters long')
+        elif re.search('[0-9]',password) is None:
+            raise ValidationError('Password must contain a number')
+        elif re.search('[A-Z]',password) is None:
+           raise ValidationError('Password must have one uppercase letter')
+        elif re.search('[@_!#$%^&*()<>?/\|}{~:]', password) is None:
+            raise ValidationError('password should contain special char')
 
 
 class LoginForm(FlaskForm):
